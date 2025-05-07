@@ -1,6 +1,7 @@
 package main
 
 import (
+	deck "blackjack/src"
 	"fmt"
 	"os"
 
@@ -19,6 +20,7 @@ const (
 type model struct {
 	tea.Model
 	gameState GameState
+	deck      deck.Deck
 }
 
 func (m model) Init() tea.Cmd {
@@ -44,9 +46,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // The UI is a string
 func (m model) View() string {
 	// The header
-	// The footer
 	s := "Black Jack\n\n"
 
+	// The footer
 	s += "\nPress q to quit\n\n"
 
 	// Send the UI for rendering
@@ -55,7 +57,9 @@ func (m model) View() string {
 
 func initialModel() model {
 	return model{
-		gameState: ModeGameStart}
+		gameState: ModeGameStart,
+		// TODO: Allow user to specify amount of decks to play with
+		deck: deck.NewDeck(1)}
 }
 
 func main() {
