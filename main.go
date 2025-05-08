@@ -19,27 +19,36 @@ const (
 // model stores our application's state
 type model struct {
 	tea.Model
+	altscreen bool
 	gameState GameState
+	width     int
+	height    int
 	deck      deck.Deck
 }
 
 func (m model) Init() tea.Cmd {
-	// Just return `nil`, which means "no I/O right now, please."
-	return nil
+	return tea.Batch(
+		tea.SetWindowTitle("Black Jack"),
+		tea.EnterAltScreen,
+	)
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
+
 	// Checks if a key is pressed
 	case tea.KeyMsg:
 		// What key was pressed?
 		switch msg.String() {
-		case "ctrl+c", "q":
+		case "ctrl+c", "q", "esc":
 			return m, tea.Quit
 		}
-
 	}
+
 	return m, nil
 }
 
