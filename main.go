@@ -1,7 +1,6 @@
 package main
 
 import (
-	deck "blackjack/src"
 	"fmt"
 	"os"
 
@@ -19,11 +18,9 @@ const (
 // model stores our application's state
 type model struct {
 	tea.Model
-	altscreen bool
 	gameState GameState
 	width     int
 	height    int
-	deck      deck.Deck
 }
 
 func (m model) Init() tea.Cmd {
@@ -66,9 +63,10 @@ func (m model) View() string {
 
 func initialModel() model {
 	return model{
+		// TODO: Shuffle the deck
 		gameState: ModeGameStart,
 		// TODO: Allow user to specify amount of decks to play with
-		deck: deck.NewDeck(1)}
+	}
 }
 
 func main() {

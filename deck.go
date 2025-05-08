@@ -1,5 +1,5 @@
 // Package provides a way to deal with a deck of cards
-package deck
+package main
 
 type Card struct {
 	Suit string
