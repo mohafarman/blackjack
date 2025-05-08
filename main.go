@@ -7,18 +7,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type GameState int
-
-const (
-	ModeGameStart GameState = iota
-	ModeGamePlaying
-	ModeGameOver
-)
-
 // model stores our application's state
 type model struct {
 	tea.Model
-	gameState GameState
+	blackjack blackJack
 	width     int
 	height    int
 }
@@ -64,8 +56,7 @@ func (m model) View() string {
 func initialModel() model {
 	return model{
 		// TODO: Shuffle the deck
-		gameState: ModeGameStart,
-		// TODO: Allow user to specify amount of decks to play with
+		blackjack: newGame(),
 	}
 }
 
