@@ -1,21 +1,72 @@
 package main
 
 import (
-	"github.com/charmbracelet/lipgloss"
+	"fmt"
+	"log"
 	"strings"
+
+	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/termenv"
 )
 
-func renderGameState(gs GameState, width int) string {
+// termenv for color styling
+
+func renderCard(card Card) string {
+	var p = termenv.ColorProfile()
+	var suitSymbol string
+	var suitColor termenv.Color
+
+	switch card.Suit {
+	case "Hearts":
+		suitSymbol = "♥"
+		suitColor = p.Color("#FF0000") // Red color
+	case "Diamonds":
+		suitSymbol = "♦"
+		suitColor = p.Color("#FF0000") // Red color
+	case "Clubs":
+		suitSymbol = "♣"
+		suitColor = p.Color("#FFFFFF") // Black color
+	case "Spades":
+		suitSymbol = "♠"
+		suitColor = p.Color("#FFFFFF") // Black color
+	}
+
+	coloredSymbol := termenv.String(suitSymbol).Foreground(suitColor).String()
+	return fmt.Sprintf("%s%s", card.Rank, coloredSymbol)
+}
+
+func renderHand(doc *strings.Builder, hand []Card) {
+	for i := range hand {
+		doc.WriteString(renderCard(hand[i]))
+		doc.WriteString(" ")
+	}
+}
+
+func renderGameState(bj blackJack, width int) string {
 	doc := &strings.Builder{}
 	// The header
-	RenderTitleRow(width, doc, TitleRowProps{"Black Jack\n\n"})
+	RenderTitleRow(width, doc, TitleRowProps{"Black Jack"})
+	// At least one "\n" needs to be printed otherwise the next doc.WriteString is not displayed
+	doc.WriteString("\n\n")
 
-	if gs == ModeGameStart {
+	if bj.gameState == ModeGameStart {
 		/* TODO: Display the cards */
+		/* Dealer hand */
+		doc.WriteString("Dealer hand:\t")
+		renderHand(doc, bj.dealerHand)
+
+		doc.WriteString("\n\n")
+
+		/* Player hand */
+		doc.WriteString("Your hand:\t")
+		renderHand(doc, bj.dealerHand)
+		/* TODO: Render players hand score */
 	}
 
 	// The footer
-	doc.WriteString("\nPress q to quit\n\n")
+	doc.WriteString("\n\nPress q to quit\n\n")
+
+	log.Println()
 
 	// Send the UI for rendering
 	return doc.String()

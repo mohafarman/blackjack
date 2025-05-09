@@ -16,7 +16,7 @@ type blackJack struct {
 	dealerHand []Card
 }
 
-func (bj blackJack) dealInitCards() {
+func (bj *blackJack) dealInitCards() {
 	var card Card
 	for range 2 {
 		/* Slicing slices to deal cards, deals one card at a time */
