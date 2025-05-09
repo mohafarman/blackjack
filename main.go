@@ -44,14 +44,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // The UI is a string
 func (m model) View() string {
-	// The header
-	s := "Black Jack\n\n"
-
-	// The footer
-	s += "\nPress q to quit\n\n"
-
-	// Send the UI for rendering
-	return s
+	return renderGameState(m.blackjack.gameState, m.width)
 }
 
 func initialModel() model {
