@@ -30,15 +30,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width = msg.Width
 		m.height = msg.Height
 
-	// Checks if a key is pressed
 	case tea.KeyMsg:
-		// What key was pressed?
 		switch msg.String() {
 		case "ctrl+c", "q", "esc":
 			return m, tea.Quit
+
+		// TODO: Handle Hit
+		case "h":
+			if m.blackjack.gameState == ModeGameStart {
+				m.blackjack.playerHit()
+			}
+			return m, nil
+
+		// TODO: Handle Stand
+
 		case "r":
 			// tea.WindowSize() allows for the RenderTitleRow to continue rendering properly
-			return initialModel(), tea.WindowSize()
+			return initialModel(), tea.Batch(tea.ClearScreen, tea.WindowSize())
 		}
 
 	}

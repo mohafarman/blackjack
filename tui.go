@@ -60,7 +60,6 @@ func renderGameState(bj blackJack, width int) string {
 		/* Player hand */
 		doc.WriteString("Your hand:\t")
 		renderHand(doc, bj.playerHand)
-		/* TODO: Render players hand score */
 		playerScore, isSoft := bj.calculateHandScore(bj.playerHand)
 		scoreText := fmt.Sprintf("%d", playerScore)
 		if isSoft {
@@ -70,7 +69,8 @@ func renderGameState(bj blackJack, width int) string {
 	}
 
 	// The footer
-	doc.WriteString("\n\nPress q to quit\n\n")
+	doc.WriteString("\n\n\nPress 'H' to hit\n\n")
+	doc.WriteString("\nPress 'Q' to quit\n\n")
 
 	// Send the UI for rendering
 	return doc.String()

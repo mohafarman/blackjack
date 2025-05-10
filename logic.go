@@ -1,7 +1,7 @@
 // logic.go handles the game logic
 package main
 
-import ()
+import "log"
 
 type GameState int
 
@@ -66,11 +66,21 @@ func (bj blackJack) calculateHandScore(hand []Card) (int, bool) {
 	return score, soft
 }
 
+/* TODO: Implement */
+func (bj *blackJack) playerHit() {
+	var card Card
+	card = bj.deck.Cards[0]
+	bj.playerHand = append(bj.playerHand, card)
+	bj.deck.Cards = bj.deck.Cards[1:]
+
+	bj.calculateHandScore(bj.playerHand)
+}
+
 func newGame() blackJack {
 	bj := blackJack{
 		gameState: ModeGameStart,
 		// TODO: Allow user to specify amount of decks to play with
-		deck: shuffleDeck(newDeck(4)),
+		deck: shuffleDeck(newDeck(1)),
 	}
 
 	bj.dealInitCards()
