@@ -53,7 +53,7 @@ func (bj blackJack) calculateHandScore(hand []Card) (int, bool) {
 	}
 
 	// Adjust for aces
-	if score > 21 && aces != 0 {
+	if score > 21 && aces > 0 {
 		aces--
 		score -= 10
 		soft = false

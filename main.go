@@ -36,7 +36,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q", "esc":
 			return m, tea.Quit
+		case "r":
+			// tea.WindowSize() allows for the RenderTitleRow to continue rendering properly
+			return initialModel(), tea.WindowSize()
 		}
+
 	}
 
 	return m, nil

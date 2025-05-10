@@ -64,7 +64,7 @@ func renderGameState(bj blackJack, width int) string {
 		playerScore, isSoft := bj.calculateHandScore(bj.playerHand)
 		scoreText := fmt.Sprintf("%d", playerScore)
 		if isSoft {
-			scoreText = fmt.Sprintf("\tSoft %s", scoreText)
+			scoreText = fmt.Sprintf("Soft %s", scoreText)
 		}
 		doc.WriteString(fmt.Sprintf("\t== %s", scoreText))
 	}
