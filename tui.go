@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -53,20 +52,25 @@ func renderGameState(bj blackJack, width int) string {
 		/* TODO: Display the cards */
 		/* Dealer hand */
 		doc.WriteString("Dealer hand:\t")
+		// Dealer score not be calculated right now. Only at the end of the game
 		renderHand(doc, bj.dealerHand)
 
 		doc.WriteString("\n\n")
 
 		/* Player hand */
 		doc.WriteString("Your hand:\t")
-		renderHand(doc, bj.dealerHand)
+		renderHand(doc, bj.playerHand)
 		/* TODO: Render players hand score */
+		playerScore, isSoft := bj.calculateHandScore(bj.playerHand)
+		scoreText := fmt.Sprintf("%d", playerScore)
+		if isSoft {
+			scoreText = fmt.Sprintf("\tSoft %s", scoreText)
+		}
+		doc.WriteString(fmt.Sprintf("\t== %s", scoreText))
 	}
 
 	// The footer
 	doc.WriteString("\n\nPress q to quit\n\n")
-
-	log.Println()
 
 	// Send the UI for rendering
 	return doc.String()
