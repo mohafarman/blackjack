@@ -41,6 +41,14 @@ func renderHand(doc *strings.Builder, hand []Card) {
 	}
 }
 
+func renderScore(score int, soft bool) string {
+	scoreText := fmt.Sprintf("%d", score)
+	if soft {
+		return fmt.Sprintf("Soft %s", scoreText)
+	}
+	return fmt.Sprintf("\t== %s", scoreText)
+}
+
 func renderGameState(bj blackJack, width int) string {
 	doc := &strings.Builder{}
 	// The header
@@ -48,32 +56,54 @@ func renderGameState(bj blackJack, width int) string {
 	// At least one "\n" needs to be printed otherwise the next doc.WriteString is not displayed
 	doc.WriteString("\n\n")
 
+	/* Dealer hand */
+	doc.WriteString("Dealer hand:\t")
+	/* Hide one card when game is on */
 	if bj.gameState == ModeGameStart {
-		/* TODO: Display the cards */
-		/* Dealer hand */
-		doc.WriteString("Dealer hand:\t")
 		// Dealer score not be calculated right now. Only at the end of the game
+		doc.WriteString("??")
+		doc.WriteString(renderCard(bj.dealerHand[1]))
+	}
+
+	if bj.gameState == ModeGameOver {
 		renderHand(doc, bj.dealerHand)
+		doc.WriteString("\t")
+		doc.WriteString(renderScore(bj.calculateHandScore(bj.dealerHand)))
+	}
+	doc.WriteString("\n\n")
 
-		doc.WriteString("\n\n")
+	/* Player hand */
+	doc.WriteString("Your hand:\t")
+	renderHand(doc, bj.playerHand)
+	doc.WriteString(renderScore(bj.calculateHandScore(bj.playerHand)))
 
-		/* Player hand */
-		doc.WriteString("Your hand:\t")
-		renderHand(doc, bj.playerHand)
-		playerScore, isSoft := bj.calculateHandScore(bj.playerHand)
-		scoreText := fmt.Sprintf("%d", playerScore)
-		if isSoft {
-			scoreText = fmt.Sprintf("Soft %s", scoreText)
-		}
-		doc.WriteString(fmt.Sprintf("\t== %s", scoreText))
+	/* TODO Handle Game Over */
+	if bj.gameState == ModeGameOver {
+		doc.WriteString("\n\n\n")
+		doc.WriteString(gameOverMessage(bj))
+		doc.WriteString("\n\n\nPress 'H' to play next hand\n\n")
 	}
 
 	// The footer
-	doc.WriteString("\n\n\nPress 'H' to hit\n\n")
+	if bj.gameState == ModeGameStart {
+		doc.WriteString("\n\n\nPress 'H' to hit or 'S' to stand\n\n")
+	}
+
 	doc.WriteString("\nPress 'Q' to quit\n\n")
 
 	// Send the UI for rendering
 	return doc.String()
+}
+
+/* TODO: Implement */
+func gameOverMessage(bj blackJack) string {
+	if bj.playerWins {
+		return "Player Wins!"
+	} else if bj.tie {
+		return "Tie!"
+	} else {
+		return "Dealer Wins!"
+	}
 }
 
 /***************************************************************************************************/

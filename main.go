@@ -39,10 +39,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "h":
 			if m.blackjack.gameState == ModeGameStart {
 				m.blackjack.playerHit()
+			} else if m.blackjack.gameState == ModeGameOver {
+				/* TODO: Continue playing with a new hand */
 			}
 			return m, nil
 
 		// TODO: Handle Stand
+		case "s":
+			if m.blackjack.gameState == ModeGameStart {
+				m.blackjack.gameState = ModeGameOver
+				m.blackjack.determineWinner()
+			}
+			return m, nil
 
 		case "r":
 			// tea.WindowSize() allows for the RenderTitleRow to continue rendering properly

@@ -1,8 +1,6 @@
 // logic.go handles the game logic
 package main
 
-import "log"
-
 type GameState int
 
 const (
@@ -18,6 +16,8 @@ type blackJack struct {
 	dealerHand  []Card
 	playerScore int
 	dealerScore int
+	playerWins  bool
+	tie         bool
 }
 
 func (bj *blackJack) dealInitCards() {
@@ -66,14 +66,33 @@ func (bj blackJack) calculateHandScore(hand []Card) (int, bool) {
 	return score, soft
 }
 
-/* TODO: Implement */
 func (bj *blackJack) playerHit() {
 	var card Card
 	card = bj.deck.Cards[0]
 	bj.playerHand = append(bj.playerHand, card)
 	bj.deck.Cards = bj.deck.Cards[1:]
 
-	bj.calculateHandScore(bj.playerHand)
+	bj.playerScore, _ = bj.calculateHandScore(bj.playerHand)
+	if bj.playerScore > 21 {
+		bj.gameState = ModeGameOver
+		bj.playerWins = false
+	}
+}
+
+/* TODO Implement */
+func (bj *blackJack) determineWinner() {
+	bj.gameState = ModeGameOver
+
+	if bj.playerScore > 21 {
+		bj.playerWins = false
+	} else if bj.dealerScore > 21 || bj.playerScore > bj.dealerScore {
+		bj.playerWins = true
+	} else if bj.dealerScore > bj.playerScore {
+		bj.playerWins = false
+	} else {
+		bj.tie = true
+		bj.playerWins = false
+	}
 }
 
 func newGame() blackJack {
