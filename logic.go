@@ -22,6 +22,8 @@ type blackJack struct {
 
 func (bj *blackJack) dealInitCards() {
 	var card Card
+	bj.playerHand = []Card{}
+	bj.dealerHand = []Card{}
 	for range 2 {
 		/* Slicing slices to deal cards, deals one card at a time */
 		card = bj.deck.Cards[0]
@@ -32,6 +34,14 @@ func (bj *blackJack) dealInitCards() {
 		bj.dealerHand = append(bj.dealerHand, card)
 		bj.deck.Cards = bj.deck.Cards[1:]
 	}
+}
+
+/* TODO: Implement */
+func newRound(bj *blackJack) {
+	bj.gameState = ModeGameStart
+	bj.playerScore = 0
+	bj.dealerScore = 0
+	bj.dealInitCards()
 }
 
 func (bj blackJack) calculateHandScore(hand []Card) (int, bool) {
@@ -79,7 +89,6 @@ func (bj *blackJack) playerHit() {
 	}
 }
 
-/* TODO Implement */
 func (bj *blackJack) determineWinner() {
 	bj.gameState = ModeGameOver
 

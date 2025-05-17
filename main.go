@@ -20,6 +20,7 @@ func (m model) Init() tea.Cmd {
 	return tea.Batch(
 		tea.SetWindowTitle("Black Jack"),
 		tea.EnterAltScreen,
+		tea.ClearScreen,
 	)
 }
 
@@ -35,16 +36,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl+c", "q", "esc":
 			return m, tea.Quit
 
-		// TODO: Handle Hit
 		case "h":
 			if m.blackjack.gameState == ModeGameStart {
 				m.blackjack.playerHit()
 			} else if m.blackjack.gameState == ModeGameOver {
 				/* TODO: Continue playing with a new hand */
+				newRound(&m.blackjack)
 			}
-			return m, nil
+			return m, tea.Batch(tea.ClearScreen, tea.WindowSize())
 
-		// TODO: Handle Stand
 		case "s":
 			if m.blackjack.gameState == ModeGameStart {
 				m.blackjack.gameState = ModeGameOver
@@ -64,7 +64,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // The UI is a string
 func (m model) View() string {
-	return renderGameState(m.blackjack, m.width)
+	return renderGameState(m, m.width)
 }
 
 func initialModel() model {

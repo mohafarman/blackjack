@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -49,7 +50,7 @@ func renderScore(score int, soft bool) string {
 	return fmt.Sprintf("\t== %s", scoreText)
 }
 
-func renderGameState(bj blackJack, width int) string {
+func renderGameState(m model, width int) string {
 	doc := &strings.Builder{}
 	// The header
 	RenderTitleRow(width, doc, TitleRowProps{"Black Jack"})
@@ -59,33 +60,34 @@ func renderGameState(bj blackJack, width int) string {
 	/* Dealer hand */
 	doc.WriteString("Dealer hand:\t")
 	/* Hide one card when game is on */
-	if bj.gameState == ModeGameStart {
+	if m.blackjack.gameState == ModeGameStart {
 		// Dealer score not be calculated right now. Only at the end of the game
 		doc.WriteString("??")
-		doc.WriteString(renderCard(bj.dealerHand[1]))
+		doc.WriteString(renderCard(m.blackjack.dealerHand[1]))
 	}
 
-	if bj.gameState == ModeGameOver {
-		renderHand(doc, bj.dealerHand)
+	if m.blackjack.gameState == ModeGameOver {
+		renderHand(doc, m.blackjack.dealerHand)
 		doc.WriteString("\t")
-		doc.WriteString(renderScore(bj.calculateHandScore(bj.dealerHand)))
+		doc.WriteString(renderScore(m.blackjack.calculateHandScore(m.blackjack.dealerHand)))
 	}
 	doc.WriteString("\n\n")
 
 	/* Player hand */
 	doc.WriteString("Your hand:\t")
-	renderHand(doc, bj.playerHand)
-	doc.WriteString(renderScore(bj.calculateHandScore(bj.playerHand)))
+	renderHand(doc, m.blackjack.playerHand)
+	doc.WriteString(renderScore(m.blackjack.calculateHandScore(m.blackjack.playerHand)))
 
 	/* TODO Handle Game Over */
-	if bj.gameState == ModeGameOver {
+	if m.blackjack.gameState == ModeGameOver {
 		doc.WriteString("\n\n\n")
-		doc.WriteString(gameOverMessage(bj))
+		doc.WriteString(gameOverMessage(m.blackjack))
 		doc.WriteString("\n\n\nPress 'H' to play next hand\n\n")
+		log.Println("Player score:", m.blackjack.playerScore)
 	}
 
 	// The footer
-	if bj.gameState == ModeGameStart {
+	if m.blackjack.gameState == ModeGameStart {
 		doc.WriteString("\n\n\nPress 'H' to hit or 'S' to stand\n\n")
 	}
 
