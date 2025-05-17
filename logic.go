@@ -36,7 +36,6 @@ func (bj *blackJack) dealInitCards() {
 	}
 }
 
-/* TODO: Implement */
 func newRound(bj *blackJack) {
 	bj.gameState = ModeGameStart
 	bj.playerScore = 0
@@ -89,8 +88,24 @@ func (bj *blackJack) playerHit() {
 	}
 }
 
+func (bj *blackJack) dealerHit() {
+	var card Card
+	card = bj.deck.Cards[0]
+	bj.dealerHand = append(bj.dealerHand, card)
+	bj.deck.Cards = bj.deck.Cards[1:]
+
+	bj.playerScore, _ = bj.calculateHandScore(bj.dealerHand)
+	if bj.dealerScore > 21 {
+		bj.gameState = ModeGameOver
+		bj.playerWins = true
+	}
+}
+
 func (bj *blackJack) determineWinner() {
 	bj.gameState = ModeGameOver
+
+	bj.playerScore, _ = bj.calculateHandScore(bj.playerHand)
+	bj.dealerScore, _ = bj.calculateHandScore(bj.dealerHand)
 
 	if bj.playerScore > 21 {
 		bj.playerWins = false

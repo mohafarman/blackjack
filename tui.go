@@ -78,7 +78,6 @@ func renderGameState(m model, width int) string {
 	renderHand(doc, m.blackjack.playerHand)
 	doc.WriteString(renderScore(m.blackjack.calculateHandScore(m.blackjack.playerHand)))
 
-	/* TODO Handle Game Over */
 	if m.blackjack.gameState == ModeGameOver {
 		doc.WriteString("\n\n\n")
 		doc.WriteString(gameOverMessage(m.blackjack))
@@ -97,7 +96,6 @@ func renderGameState(m model, width int) string {
 	return doc.String()
 }
 
-/* TODO: Implement */
 func gameOverMessage(bj blackJack) string {
 	if bj.playerWins {
 		return "Player Wins!"

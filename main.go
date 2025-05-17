@@ -40,7 +40,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.blackjack.gameState == ModeGameStart {
 				m.blackjack.playerHit()
 			} else if m.blackjack.gameState == ModeGameOver {
-				/* TODO: Continue playing with a new hand */
 				newRound(&m.blackjack)
 			}
 			return m, tea.Batch(tea.ClearScreen, tea.WindowSize())
@@ -48,6 +47,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "s":
 			if m.blackjack.gameState == ModeGameStart {
 				m.blackjack.gameState = ModeGameOver
+				m.blackjack.playerScore, _ = m.blackjack.calculateHandScore(m.blackjack.playerHand)
 				m.blackjack.determineWinner()
 			}
 			return m, nil
@@ -69,7 +69,6 @@ func (m model) View() string {
 
 func initialModel() model {
 	return model{
-		// TODO: Shuffle the deck
 		blackjack: newGame(),
 	}
 }
