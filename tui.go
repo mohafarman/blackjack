@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -45,7 +44,7 @@ func renderHand(doc *strings.Builder, hand []Card) {
 func renderScore(score int, soft bool) string {
 	scoreText := fmt.Sprintf("%d", score)
 	if soft {
-		return fmt.Sprintf("Soft %s", scoreText)
+		return fmt.Sprintf("\tSoft %s", scoreText)
 	}
 	return fmt.Sprintf("\t== %s", scoreText)
 }
@@ -82,7 +81,6 @@ func renderGameState(m model, width int) string {
 		doc.WriteString("\n\n\n")
 		doc.WriteString(gameOverMessage(m.blackjack))
 		doc.WriteString("\n\n\nPress 'H' to play next hand\n\n")
-		log.Println("Player score:", m.blackjack.playerScore)
 	}
 
 	// The footer

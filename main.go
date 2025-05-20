@@ -47,6 +47,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "s":
 			if m.blackjack.gameState == ModeGameStart {
 				m.blackjack.gameState = ModeGameOver
+				m.blackjack.dealerPlay()
 				m.blackjack.playerScore, _ = m.blackjack.calculateHandScore(m.blackjack.playerHand)
 				m.blackjack.determineWinner()
 			}

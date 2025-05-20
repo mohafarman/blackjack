@@ -1,6 +1,8 @@
 // logic.go handles the game logic
 package main
 
+import "log"
+
 type GameState int
 
 const (
@@ -12,6 +14,7 @@ const (
 type blackJack struct {
 	gameState   GameState
 	deck        Deck
+	h17         bool // Hits on Soft 17 if true, else stand
 	playerHand  []Card
 	dealerHand  []Card
 	playerScore int
@@ -90,14 +93,29 @@ func (bj *blackJack) playerHit() {
 
 func (bj *blackJack) dealerHit() {
 	var card Card
+
 	card = bj.deck.Cards[0]
 	bj.dealerHand = append(bj.dealerHand, card)
 	bj.deck.Cards = bj.deck.Cards[1:]
+}
 
-	bj.playerScore, _ = bj.calculateHandScore(bj.dealerHand)
-	if bj.dealerScore > 21 {
-		bj.gameState = ModeGameOver
-		bj.playerWins = true
+/* TODO: Implement */
+func (bj *blackJack) dealerPlay() {
+	var isSoft bool
+	bj.dealerScore, _ = bj.calculateHandScore(bj.dealerHand)
+
+	/* TODO: Rules */
+	/* Implement H17 and S17 */
+	/* Dealer must hit when 16 or less */
+	for bj.dealerScore <= 16 {
+		bj.dealerHit()
+		// Check soft
+		bj.dealerScore, isSoft = bj.calculateHandScore(bj.dealerHand)
+		if bj.dealerScore == 17 && isSoft && bj.h17 {
+			/* TODO: Does not get printed */
+			log.Println("Dealer is Soft!")
+			bj.dealerHit()
+		}
 	}
 }
 
@@ -123,7 +141,9 @@ func newGame() blackJack {
 	bj := blackJack{
 		gameState: ModeGameStart,
 		// TODO: Allow user to specify amount of decks to play with
-		deck: shuffleDeck(newDeck(1)),
+		deck: shuffleDeck(newDeck(4)),
+		// TODO: Allow user to specify if H17 or S17
+		h17: true,
 	}
 
 	bj.dealInitCards()
