@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -69,10 +70,15 @@ func (m model) View() string {
 }
 
 func initialModel() model {
+	log.Println("Number of decks:", *numDecks)
+	log.Println("Hit on soft 17:", *h17)
 	return model{
 		blackjack: newGame(),
 	}
 }
+
+var numDecks = flag.Int("decks", 4, "Number of decks to play with. 4-8 decks allowed.")
+var h17 = flag.Bool("h17", true, "Dealer hits on soft 17. To set false, h17=false.")
 
 func main() {
 	if len(os.Getenv("DEBUG")) > 0 {
@@ -82,6 +88,16 @@ func main() {
 			os.Exit(1)
 		}
 		defer f.Close()
+	}
+
+	flag.Parse()
+
+	if *numDecks < 4 || *numDecks > 8 {
+		var Usage = func() {
+			flag.PrintDefaults()
+		}
+		Usage()
+		os.Exit(1)
 	}
 
 	p := tea.NewProgram(initialModel())

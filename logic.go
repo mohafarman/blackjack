@@ -99,21 +99,15 @@ func (bj *blackJack) dealerHit() {
 	bj.deck.Cards = bj.deck.Cards[1:]
 }
 
-/* TODO: Implement */
 func (bj *blackJack) dealerPlay() {
 	var isSoft bool
 	bj.dealerScore, _ = bj.calculateHandScore(bj.dealerHand)
 
-	/* TODO: Rules */
-	/* Implement H17 and S17 */
-	/* Dealer must hit when 16 or less */
 	for bj.dealerScore <= 16 {
 		bj.dealerHit()
 		// Check soft
 		bj.dealerScore, isSoft = bj.calculateHandScore(bj.dealerHand)
 		if bj.dealerScore == 17 && isSoft && bj.h17 {
-			/* TODO: Does not get printed */
-			log.Println("Dealer is Soft!")
 			bj.dealerHit()
 		}
 	}
@@ -140,10 +134,8 @@ func (bj *blackJack) determineWinner() {
 func newGame() blackJack {
 	bj := blackJack{
 		gameState: ModeGameStart,
-		// TODO: Allow user to specify amount of decks to play with
-		deck: shuffleDeck(newDeck(4)),
-		// TODO: Allow user to specify if H17 or S17
-		h17: true,
+		deck:      shuffleDeck(newDeck(*numDecks)),
+		h17:       *h17,
 	}
 
 	bj.dealInitCards()
