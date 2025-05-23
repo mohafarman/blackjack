@@ -1,5 +1,6 @@
 # About
 Blackjack is one of the first applications I have developed to learn the go programming language.
+It uses a terminal user interface.
 
 ## How to use
 
