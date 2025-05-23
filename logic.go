@@ -1,8 +1,6 @@
 // logic.go handles the game logic
 package main
 
-import "log"
-
 type GameState int
 
 const (

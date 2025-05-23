@@ -26,3 +26,6 @@ go.work.sum
 
 # debugging info
 debug.log
+
+# executable
+blackjack
